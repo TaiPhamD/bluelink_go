@@ -1,4 +1,4 @@
-module bluelink_go
+module github.com/TaiPhamD/bluelink_go
 
 go 1.12
 

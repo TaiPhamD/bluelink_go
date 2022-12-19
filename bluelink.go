@@ -1,8 +1,9 @@
 package bluelink_go
 
 import (
-	"bluelink_go/api"
 	"errors"
+
+	"github.com/TaiPhamD/bluelink_go/api"
 )
 
 func Login(username, password, pin string) (api.Auth, error) {

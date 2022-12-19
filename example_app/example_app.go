@@ -1,10 +1,11 @@
 package main
 
 import (
-	"bluelink_go"
-	"bluelink_go/api"
 	"fmt"
 	"os"
+
+	"github.com/TaiPhamD/bluelink_go"
+	"github.com/TaiPhamD/bluelink_go/api"
 )
 
 func main() {
