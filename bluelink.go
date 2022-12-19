@@ -32,6 +32,7 @@ func GetVehicleFromVin(owner_info api.OwnerInfoService, vin string) (api.Vehicle
 			// the property IsGen2 is actually a string number "2" for gen 2 from Huyndai
 			// even though the name implies a boolean
 			mycar.Gen = vehicle.IsGen2
+			mycar.Mileage = vehicle.Mileage
 
 			return mycar, nil
 		}

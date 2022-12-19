@@ -498,6 +498,7 @@ type Vehicle struct {
 	RegID     string
 	VinNumber string
 	Gen       string
+	Mileage   string
 }
 
 type Auth struct {
