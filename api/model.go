@@ -491,7 +491,14 @@ type OwnerInfoService struct {
 type RemoteActionResult struct {
 	EIfresult      string `json:"E_IFRESULT"`
 	EIffailmsg     string `json:"E_IFFAILMSG"`
-	ResponseString string `json:"RESPONSE_STRING"`
+	ResponseString struct {
+		ErrorSubCode string `json:"errorSubCode"`
+		SystemName   string `json:"systemName"`
+		FunctionName string `json:"functionName"`
+		ErrorMessage string `json:"errorMessage"`
+		ErrorCode    int    `json:"errorCode"`
+		ServiceName  string `json:"serviceName"`
+	} `json:"RESPONSE_STRING"`
 }
 
 type Vehicle struct {
