@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/TaiPhamD/bluelink_go"
-	"github.com/TaiPhamD/bluelink_go/api"
 )
 
 func main() {
@@ -64,26 +63,32 @@ func main() {
 	// print ignition status
 	fmt.Println("Ignition Status: ", vehicle_status.ResponseString.VehicleStatus.IgnitionStatus)
 
-	// create climate input object
-	seatingventinfo := api.SeatHeaterVentInfo{}
-	seatingventinfo.DrvSeatHeatState = "3"
-	seatingventinfo.AstSeatHeatState = "0"
-	StartClimateInput := api.ClimateInput{
-		AirCtrl:            "true",
-		IgniOnDuration:     "NaN", //max is 10 minutes or NaN for default 10
-		AirTempvalue:       "72",
-		Defrost:            "false",
-		Heating1:           "0",
-		SeatHeaterVentInfo: seatingventinfo,
-	}
-
-	// call **StartClimate** API
-
-	err = bluelink_go.StartClimate(auth, mycar, StartClimateInput)
+	// call remoteLock action to remote lock vehicle
+	err = bluelink_go.RemoteLockAction(auth, mycar, "remotelock")
 	if err != nil {
-		fmt.Println("Error starting climate: ", err)
+		fmt.Println("Error locking vehicle: ", err)
 	}
-	fmt.Println("Started climate successfully")
+
+	/*
+		// create climate input object
+		seatingventinfo := api.SeatHeaterVentInfo{}
+		seatingventinfo.DrvSeatHeatState = "3"
+		seatingventinfo.AstSeatHeatState = "0"
+		StartClimateInput := api.ClimateInput{
+			AirCtrl:            "true",
+			IgniOnDuration:     "NaN", //max is 10 minutes or NaN for default 10
+			AirTempvalue:       "72",
+			Defrost:            "false",
+			Heating1:           "0",
+			SeatHeaterVentInfo: seatingventinfo,
+		}
+		// call **StartClimate** API
+		err = bluelink_go.StartClimate(auth, mycar, StartClimateInput)
+		if err != nil {
+			fmt.Println("Error starting climate: ", err)
+		}
+		fmt.Println("Started climate successfully")
+	*/
 
 	/*
 		// call **StopClimate** API
