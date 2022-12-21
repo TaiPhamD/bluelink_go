@@ -11,6 +11,4 @@ see this example_app for using this go module
 - GetVehicleStatus - provides battery status, door status, ignition status etc
 - StartClimate - start climate based on climate input struct
 - StopClimate - stop climate control
-
-## to do
-- lock/unlock
+- RemoteLockAction - Remote lock/unlock

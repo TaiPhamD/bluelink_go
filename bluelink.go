@@ -73,3 +73,14 @@ func StopClimate(auth api.Auth, vehicle api.Vehicle) error {
 	}
 	return nil
 }
+
+func RemoteLockAction(auth api.Auth, vehicle api.Vehicle, action string) error {
+	remote_action_result, err := api.RemoteLockAction(auth, vehicle, action)
+	if err != nil {
+		return err
+	}
+	if remote_action_result.EIfresult != "Z:Success" {
+		return errors.New(remote_action_result.EIffailmsg)
+	}
+	return nil
+}

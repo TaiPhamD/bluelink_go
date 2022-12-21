@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -316,4 +317,55 @@ func StopClimate(auth Auth, vehicle Vehicle) (RemoteActionResult, error) {
 		return RemoteActionResult{}, err
 	}
 	return stop_climate_response, nil
+}
+
+func RemoteLockAction(auth Auth, vehicle Vehicle, action string) (RemoteActionResult, error) {
+	// remote lock action
+
+	// check if action is valid. It can only be "remotelock" or "remoteunlock"
+	if action != "remotelock" && action != "remoteunlock" {
+		log.Println("Invalid action: ", action)
+		return RemoteActionResult{}, errors.New("invalid action")
+	}
+
+	req, err := http.NewRequest("POST", base_url+"/bin/common/remoteAction", nil)
+	if err != nil {
+		log.Println("Error starting climate req: ", err)
+		return RemoteActionResult{}, err
+	}
+	setReqHeaders(req, auth)
+	q := req.URL.Query()
+	q.Add("username", auth.Username)
+	q.Add("token", auth.JWT_Token)
+	// only need pin if it's remote unlock
+	if action == "remoteunlock" {
+		q.Add("pin", auth.PIN)
+	}
+	q.Add("service", action)
+	q.Add("url", "https://owners.hyundaiusa.com/us/en/page/blue-link.html")
+	q.Add("regId", vehicle.RegID)
+	q.Add("vin", vehicle.VinNumber)
+	q.Add("gen", vehicle.Gen)
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error creating remote lock req: ", err)
+		return RemoteActionResult{}, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading remote lock response: ", err)
+		return RemoteActionResult{}, err
+	}
+	log.Println("remote lock response: ", string(body))
+	// decode body as json
+	var remote_lock_response RemoteActionResult
+	err = json.Unmarshal(body, &remote_lock_response)
+	if err != nil {
+		log.Println("error decoding remote lock response: ", err)
+		return RemoteActionResult{}, err
+	}
+	return remote_lock_response, nil
 }
