@@ -1,5 +1,7 @@
 package api
 
+import "time"
+
 // structs to parse json data from bluelink api
 // auto generated via: https://mholt.github.io/json-to-go/
 
@@ -179,4 +181,215 @@ type EnrollmentDetails struct {
 		NotificationEmail string `json:"notificationEmail"`
 		Email             string `json:"email"`
 	} `json:"user"`
+}
+
+// response from https://api.telematics.hyundaiusa.com/ac/v2/rcs/rvs/vehicleStatus
+
+type VehicleStatusResponse struct {
+	HataTID       string `json:"hataTID"`
+	VehicleStatus struct {
+		DateTime       time.Time `json:"dateTime"`
+		Acc            bool      `json:"acc"`
+		DefrostStatus  string    `json:"defrostStatus"`
+		TransCond      bool      `json:"transCond"`
+		DoorLockStatus string    `json:"doorLockStatus"`
+		DoorOpen       struct {
+			FrontRight int `json:"frontRight"`
+			FrontLeft  int `json:"frontLeft"`
+			BackLeft   int `json:"backLeft"`
+			BackRight  int `json:"backRight"`
+		} `json:"doorOpen"`
+		WasherFluidStatus bool `json:"washerFluidStatus"`
+		Battery           struct {
+			BatSoc          int `json:"batSoc"`
+			SjbDeliveryMode int `json:"sjbDeliveryMode"`
+		} `json:"battery"`
+		HazardStatus    int `json:"hazardStatus"`
+		VehicleLocation struct {
+			Coord struct {
+				Alt  float64 `json:"alt"`
+				Lon  float64 `json:"lon"`
+				Type int     `json:"type"`
+				Lat  float64 `json:"lat"`
+			} `json:"coord"`
+		} `json:"vehicleLocation"`
+		Ign3                   bool   `json:"ign3"`
+		IgnitionStatus         string `json:"ignitionStatus"`
+		LowFuelLight           bool   `json:"lowFuelLight"`
+		SideBackWindowHeat     int    `json:"sideBackWindowHeat"`
+		Engine                 bool   `json:"engine"`
+		RemoteWaitingTimeAlert struct {
+			RemoteControlWaitingTime int `json:"remoteControlWaitingTime"`
+			RemoteControlAvailable   int `json:"remoteControlAvailable"`
+		} `json:"remoteWaitingTimeAlert"`
+		HoodOpen               bool   `json:"hoodOpen"`
+		BreakOilStatus         bool   `json:"breakOilStatus"`
+		AirConditionStatus     string `json:"airConditionStatus"`
+		SmartKeyBatteryWarning bool   `json:"smartKeyBatteryWarning"`
+		SteerWheelHeat         int    `json:"steerWheelHeat"`
+		TailLampStatus         int    `json:"tailLampStatus"`
+		TrunkOpen              bool   `json:"trunkOpen"`
+		DoorLock               bool   `json:"doorLock"`
+		AirCtrlOn              bool   `json:"airCtrlOn"`
+		AirTemp                struct {
+			Unit         int    `json:"unit"`
+			HvacTempType int    `json:"hvacTempType"`
+			Value        string `json:"value"`
+		} `json:"airTemp"`
+		EvStatus struct {
+			ValueDiff   int `json:"valueDiff"`
+			RemainTime2 struct {
+				Etc3 struct {
+					Unit  int `json:"unit"`
+					Value int `json:"value"`
+				} `json:"etc3"`
+				Etc2 struct {
+					Unit  int `json:"unit"`
+					Value int `json:"value"`
+				} `json:"etc2"`
+				Atc struct {
+					Unit  int `json:"unit"`
+					Value int `json:"value"`
+				} `json:"atc"`
+				Etc1 struct {
+					Unit  int `json:"unit"`
+					Value int `json:"value"`
+				} `json:"etc1"`
+			} `json:"remainTime2"`
+			EvIgnitionStatus     bool  `json:"evIgnitionStatus"`
+			InletLockModeStatus  int   `json:"inletLockModeStatus"`
+			BatteryPlugin        int   `json:"batteryPlugin"`
+			TimeDiff             int   `json:"timeDiff"`
+			BatteryCharge        bool  `json:"batteryCharge"`
+			BatteryStatus        int   `json:"batteryStatus"`
+			RemainTime           []any `json:"remainTime"`
+			BatteryPreconditiong bool  `json:"batteryPreconditiong"`
+			DrvDistance          []struct {
+				RangeByFuel struct {
+					GasModeRange struct {
+						Unit  int     `json:"unit"`
+						Value float64 `json:"value"`
+					} `json:"gasModeRange"`
+					TotalAvailableRange struct {
+						Unit  int     `json:"unit"`
+						Value float64 `json:"value"`
+					} `json:"totalAvailableRange"`
+					EvModeRange struct {
+						Unit  int     `json:"unit"`
+						Value float64 `json:"value"`
+					} `json:"evModeRange"`
+				} `json:"rangeByFuel"`
+				Type int `json:"type"`
+			} `json:"drvDistance"`
+			ReservChargeInfos struct {
+				TargetSOClist []struct {
+					RangeByFuel struct {
+						GasModeRange struct {
+							Unit  int `json:"unit"`
+							Value int `json:"value"`
+						} `json:"gasModeRange"`
+						TotalAvailableRange struct {
+							Unit  int `json:"unit"`
+							Value int `json:"value"`
+						} `json:"totalAvailableRange"`
+						EvModeRange struct {
+							Unit  int `json:"unit"`
+							Value int `json:"value"`
+						} `json:"evModeRange"`
+					} `json:"rangeByFuel"`
+					PlugType       int `json:"plugType"`
+					TargetSOClevel int `json:"targetSOClevel"`
+					Type           int `json:"type"`
+				} `json:"targetSOClist"`
+				ReservChargeInfo struct {
+					DateTime               string `json:"dateTime"`
+					ReservChargeInfoDetail struct {
+						ReservChargeSet bool   `json:"reservChargeSet"`
+						ReservEndTime   string `json:"reservEndTime"`
+						ReservFatcSet   struct {
+							Defrost bool `json:"defrost"`
+							AirTemp struct {
+								Unit  int    `json:"unit"`
+								Value string `json:"value"`
+							} `json:"airTemp"`
+							AirCtrl int `json:"airCtrl"`
+						} `json:"reservFatcSet"`
+						ReservInfo struct {
+							Time struct {
+								TimeSection int    `json:"timeSection"`
+								Time        string `json:"time"`
+							} `json:"time"`
+							Day []int `json:"day"`
+						} `json:"reservInfo"`
+					} `json:"reservChargeInfoDetail"`
+				} `json:"reservChargeInfo"`
+				ReservFlag         int `json:"reservFlag"`
+				ReserveChargeInfo2 struct {
+					ReservChargeInfoDetail struct {
+						ReservChargeSet bool   `json:"reservChargeSet"`
+						ReservEndTime   string `json:"reservEndTime"`
+						ReservFatcSet   struct {
+							Defrost bool `json:"defrost"`
+							AirTemp struct {
+								Unit  int    `json:"unit"`
+								Value string `json:"value"`
+							} `json:"airTemp"`
+							AirCtrl int `json:"airCtrl"`
+						} `json:"reservFatcSet"`
+						ReservInfo struct {
+							Time struct {
+								TimeSection int    `json:"timeSection"`
+								Time        string `json:"time"`
+							} `json:"time"`
+							Day []int `json:"day"`
+						} `json:"reservInfo"`
+					} `json:"reservChargeInfoDetail"`
+				} `json:"reserveChargeInfo2"`
+				OffpeakPowerInfo struct {
+					OffPeakPowerFlag  int `json:"offPeakPowerFlag"`
+					OffPeakPowerTime1 struct {
+						StartTime struct {
+							TimeSection int    `json:"timeSection"`
+							Time        string `json:"time"`
+						} `json:"startTime"`
+						EndTime struct {
+							TimeSection int    `json:"timeSection"`
+							Time        string `json:"time"`
+						} `json:"endTime"`
+					} `json:"offPeakPowerTime1"`
+				} `json:"offpeakPowerInfo"`
+			} `json:"reservChargeInfos"`
+		} `json:"evStatus"`
+		LampWireStatus struct {
+			HeadLamp struct {
+				RightBifuncLamp bool `json:"rightBifuncLamp"`
+				HeadLampStatus  bool `json:"headLampStatus"`
+				LeftLowLamp     bool `json:"leftLowLamp"`
+				RightHighLamp   bool `json:"rightHighLamp"`
+				LeftBifuncLamp  bool `json:"leftBifuncLamp"`
+				LeftHighLamp    bool `json:"leftHighLamp"`
+				RightLowLamp    bool `json:"rightLowLamp"`
+			} `json:"headLamp"`
+			StopLamp struct {
+				RightLamp bool `json:"rightLamp"`
+				LeftLamp  bool `json:"leftLamp"`
+			} `json:"stopLamp"`
+			TurnSignalLamp struct {
+				RightRearLamp  bool `json:"rightRearLamp"`
+				RightFrontLamp bool `json:"rightFrontLamp"`
+				LeftRearLamp   bool `json:"leftRearLamp"`
+				LeftFrontLamp  bool `json:"leftFrontLamp"`
+			} `json:"turnSignalLamp"`
+		} `json:"lampWireStatus"`
+		SleepModeCheck   bool `json:"sleepModeCheck"`
+		Defrost          bool `json:"defrost"`
+		TirePressureLamp struct {
+			TirePressureWarningLampRearLeft   int `json:"tirePressureWarningLampRearLeft"`
+			TirePressureWarningLampFrontLeft  int `json:"tirePressureWarningLampFrontLeft"`
+			TirePressureWarningLampFrontRight int `json:"tirePressureWarningLampFrontRight"`
+			TirePressureWarningLampAll        int `json:"tirePressureWarningLampAll"`
+			TirePressureWarningLampRearRight  int `json:"tirePressureWarningLampRearRight"`
+		} `json:"tirePressureLamp"`
+		TrunkOpenStatus string `json:"trunkOpenStatus"`
+	} `json:"vehicleStatus"`
 }

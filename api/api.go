@@ -358,3 +358,31 @@ func StopClimate(auth Auth) error {
 	return nil
 
 }
+
+func GetVehicleStatus(auth Auth, refresh string) (VehicleStatusResponse, error) {
+	// stop climate
+	req, err := http.NewRequest("GET", base_url+"/ac/v2/rcs/rvs/vehicleStatus", nil)
+	if err != nil {
+		log.Println("Error getting vehicleStatus req: ", err)
+		return VehicleStatusResponse{}, err
+	}
+	setReqHeaders(req, auth)
+	req.Header.Add("refresh", refresh)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error getting vehicleStatus: ", err)
+		return VehicleStatusResponse{}, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading vehicleStatus: ", err)
+		return VehicleStatusResponse{}, err
+	}
+	// marshal to VehicleStatusResponse struct
+	var vehicle_status_result VehicleStatusResponse
+	json.Unmarshal([]byte(body), &vehicle_status_result)
+
+	return vehicle_status_result, nil
+}

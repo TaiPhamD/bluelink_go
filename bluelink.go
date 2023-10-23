@@ -3,6 +3,7 @@ package bluelink_go
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/TaiPhamD/bluelink_go/api"
@@ -52,6 +53,30 @@ func GetOdometer(auth api.Auth) (string, error) {
 	}
 	// return error vehicle not found
 	return "", errors.New("vehicle not found")
+}
+
+func GetVehicleStatus(auth api.Auth) (api.VehicleStatusResponse, error) {
+	status, err := api.GetVehicleStatus(auth, "false")
+	if err != nil {
+		return api.VehicleStatusResponse{}, err
+	}
+
+	// get current time
+	currentTime := time.Now()
+	// get last updated time
+	lastUpdated := status.VehicleStatus.DateTime
+
+	// if lastUpdated is more than 10 minutes ago then call api again but with "true" to refresh it
+	duration := currentTime.Sub(lastUpdated)
+	if duration.Minutes() > 15 {
+		log.Println("Vehicle status is more than 15 minutes old, refreshing...")
+		status, err = api.GetVehicleStatus(auth, "true")
+		if err != nil {
+			return api.VehicleStatusResponse{}, err
+		}
+	}
+
+	return status, nil
 }
 
 func StartClimate(auth api.Auth, temp int) error {
