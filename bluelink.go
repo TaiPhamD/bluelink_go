@@ -42,10 +42,10 @@ func GetOdometer(auth api.Auth) (string, error) {
 				duration := time.Since(t)
 				// 3. Extract the number of hours
 				hours := duration.Hours()
-				s := fmt.Sprintf(" last updated %d hours ago", int(hours))
+				s := fmt.Sprintf(" miles last updated %d hours ago", int(hours))
 				return vehicle.VehicleDetails.Odometer + s, nil
 			} else {
-				return vehicle.VehicleDetails.Odometer, nil
+				return vehicle.VehicleDetails.Odometer + " miles", nil
 			}
 
 		}
