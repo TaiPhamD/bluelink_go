@@ -2,6 +2,8 @@ package bluelink_go
 
 import (
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/TaiPhamD/bluelink_go/api"
 )
@@ -30,7 +32,22 @@ func GetOdometer(auth api.Auth) (string, error) {
 	// loop through details until we find matching vehicles vin
 	for _, vehicle := range details.EnrolledVehicleDetails {
 		if vehicle.VehicleDetails.Vin == auth.VIN {
-			return vehicle.VehicleDetails.Odometer, nil
+			updateDate := vehicle.VehicleDetails.OdometerUpdateDate
+			format := "20060102150405" // Go uses this unique layout format based on the reference time "Mon Jan 2 15:04:05 -0700 MST 2006"
+
+			// 1. Parse the string into a time.Time object
+			t, err := time.Parse(format, updateDate)
+			if err == nil {
+				//fmt.Println("Error:", err)
+				duration := time.Since(t)
+				// 3. Extract the number of hours
+				hours := duration.Hours()
+				s := fmt.Sprintf(" last updated %d hours ago", int(hours))
+				return vehicle.VehicleDetails.Odometer + s, nil
+			} else {
+				return vehicle.VehicleDetails.Odometer, nil
+			}
+
 		}
 	}
 	// return error vehicle not found
