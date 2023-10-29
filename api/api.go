@@ -322,13 +322,6 @@ func DoorLock(auth Auth) error {
 		log.Println("Error locking doors: ", err)
 		return err
 	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("Error reading lock doors: ", err)
-		return err
-	}
-	log.Println("Lock doors response: ", string(body))
 
 	// read response header "tmsTid"
 	tmsTid := resp.Header.Get("tmsTid")
@@ -354,7 +347,7 @@ func DoorLock(auth Auth) error {
 	defer resp.Body.Close()
 	// unmarshal response body to RunningStatusResponse struct
 
-	body, err = io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Error reading getRunningStatus: ", err)
 		return err
