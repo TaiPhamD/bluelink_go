@@ -263,6 +263,117 @@ func setReqHeaders(req *http.Request, auth Auth) {
 }
 
 /*
+curl --location 'https://api.telematics.hyundaiusa.com/ac/v2/rcs/rdo/off' \
+--header 'access_token: xxxxx' \
+--header 'client_id: xxxxxx' \
+--header 'Host: api.telematics.hyundaiusa.com' \
+--header 'User-Agent: okhttp/3.12.0' \
+--header 'registrationId: xxxxx' \
+--header 'gen: 2' \
+--header 'username: xxxx' \
+--header 'vin: xxxx' \
+--header 'APPCLOUD-VIN: xxx' \
+--header 'Language: 0' \
+--header 'to: ISS' \
+--header 'encryptFlag: false' \
+--header 'from: SPA' \
+--header 'brandIndicator: H' \
+--header 'bluelinkservicepin: xxx' \
+--header 'offset: -4' \
+--header 'Content-Type: application/json' \
+
+	--data-raw '{
+		"vin": "xxxx",
+		"username": "xxxxx"
+	}'
+
+// check status api
+
+curl --location 'https://api.telematics.hyundaiusa.com/ac/v2/rmt/getRunningStatus' \
+--header 'access_token: xxx' \
+--header 'client_id: xxxx' \
+--header 'Host: api.telematics.hyundaiusa.com' \
+--header 'User-Agent: okhttp/3.12.0' \
+--header 'registrationId: xxxxx' \
+--header 'gen: 2' \
+--header 'login_id: your_email_address' \
+--header 'vin: xxxx' \
+--header 'APPCLOUD-VIN: xxx' \
+--header 'Language: 0' \
+--header 'to: ISS' \
+--header 'encryptFlag: false' \
+--header 'from: SPA' \
+--header 'brandIndicator: H' \
+--header 'offset: -4' \
+--header 'service_type: REMOTE_LOCK' \
+--header 'tid: TID_HEADER_RESPONSE_FROM_LOCK_UNLOCK_COMMAND' \
+*/
+func DoorLock(auth Auth) error {
+	// lock doors
+	req, err := http.NewRequest("POST", base_url+"/ac/v2/rcs/rdo/off", strings.NewReader(fmt.Sprintf(`{"vin": "%s", "username": "%s"}`, auth.VIN, auth.Username)))
+	if err != nil {
+		log.Println("Error locking doors req: ", err)
+		return err
+	}
+	setReqHeaders(req, auth)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error locking doors: ", err)
+		return err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading lock doors: ", err)
+		return err
+	}
+	log.Println("Lock doors response: ", string(body))
+
+	// read response header "tmsTid"
+	tmsTid := resp.Header.Get("tmsTid")
+
+	// wait 5 seconds before checking getRunningStatus
+	time.Sleep(5 * time.Second)
+
+	// check status api
+	req, err = http.NewRequest("GET", base_url+"/ac/v2/rmt/getRunningStatus", nil)
+	if err != nil {
+		log.Println("Error getting getRunningStatus req: ", err)
+		return err
+	}
+	setReqHeaders(req, auth)
+	req.Header.Add("service_type", "REMOTE_LOCK")
+	req.Header.Add("tid", tmsTid)
+
+	resp, err = http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error getting getRunningStatus: ", err)
+		return err
+	}
+	defer resp.Body.Close()
+	// unmarshal response body to RunningStatusResponse struct
+
+	body, err = io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading getRunningStatus: ", err)
+		return err
+	}
+	var running_status_result RunningStatusResponse
+	json.Unmarshal([]byte(body), &running_status_result)
+
+	log.Println("getRunningStatus response: ", running_status_result)
+	// check to make sure result.Status == "SUCCESS"
+	if running_status_result.Status != "SUCCESS" {
+		log.Println("Error getRunningStatus result.Status: ", running_status_result.Status)
+		// return the above text as error message
+		return fmt.Errorf("error getRunningStatus result.Status: %s", running_status_result.Status)
+	}
+	return nil
+
+}
+
+/*
 
 curl --location 'https://api.telematics.hyundaiusa.com/ac/v2/evc/fatc/start' \
 --header 'access_token: xxxxx' \

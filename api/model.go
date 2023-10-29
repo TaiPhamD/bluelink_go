@@ -393,3 +393,9 @@ type VehicleStatusResponse struct {
 		TrunkOpenStatus string `json:"trunkOpenStatus"`
 	} `json:"vehicleStatus"`
 }
+
+type RunningStatusResponse struct {
+	NextPollingInterval string `json:"nextPollingInterval"`
+	Tid                 string `json:"tid"`
+	Status              string `json:"status"`
+}

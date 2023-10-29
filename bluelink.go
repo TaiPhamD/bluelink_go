@@ -79,6 +79,14 @@ func GetVehicleStatus(auth api.Auth) (api.VehicleStatusResponse, error) {
 	return status, nil
 }
 
+func DoorLock(auth api.Auth) error {
+	err := api.DoorLock(auth)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func StartClimate(auth api.Auth, temp int) error {
 	err := api.StartClimate(auth, temp)
 	if err != nil {
